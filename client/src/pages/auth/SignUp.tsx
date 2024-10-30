@@ -4,25 +4,21 @@ import { Loader2, LockKeyhole, Mail, PhoneCallIcon, User } from "lucide-react"
 import { Separator } from "@radix-ui/react-separator";
 import { Link } from "react-router-dom";
 import { useState,ChangeEvent, FormEvent } from "react";
+import { SignupInputState, userSignUpSchema } from "@/schema/userSchema";
+
 
 // Typescript me type define krne ka 2 tarika 
 
-
-type LoginInputState = {
-    fullname: string;
-    email: string;
-    password: string;
-    contact: string;
-}
-
 const SignUp = () => {
 
-    const [input,setInput] = useState<LoginInputState>({
+    const [input,setInput] = useState<SignupInputState>({
         fullname:"",
         email:"",
         password:"",
         contact:""
     });
+    
+    const [errors,setErrors] = useState<Partial<SignupInputState>>({});
 
 
     const changeEventHandler = (e: ChangeEvent<HTMLInputElement>) =>{
@@ -36,6 +32,15 @@ const SignUp = () => {
 
     const loginHandler = (e:FormEvent)=>{
         e.preventDefault();
+
+        const result = userSignUpSchema.safeParse(input);
+        if(!result.success){
+            const fieldError = result.error.formErrors.fieldErrors;
+            setErrors(fieldError as Partial<SignupInputState>);
+            return;
+        }
+
+        // Api fetching from backend...
         console.log(input);
     }
     const loading = false;
@@ -43,7 +48,7 @@ const SignUp = () => {
     return (
         <div className="flex items-center justify-center min-h-screen">
             <form onSubmit={loginHandler} className="md:p-8 w-full max-w-md rounded-lg md:border border border-gray-200 mx-4">
-                <div className="mb-4">
+                <div className="mb-4 text-center">
                     <h1 className="font-bold text-2xl">Kp-Hotel's</h1>
                 </div>
                 <div className="mb-4">
@@ -57,6 +62,10 @@ const SignUp = () => {
                             className="pl-10 focus-visible:ring-1"
                         />
                         <User className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none" />
+                        {
+                            errors && <span className="text-sm text-red-500">{errors.fullname}</span>
+
+                        }
                     </div>
                 </div>
                 <div className="mb-4">
@@ -70,6 +79,10 @@ const SignUp = () => {
                             className="pl-10 focus-visible:ring-1"
                         />
                         <Mail className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none" />
+                        {
+                            errors && <span className="text-sm text-red-500">{errors.email}</span>
+
+                        }
                     </div>
                 </div>
 
@@ -84,6 +97,10 @@ const SignUp = () => {
                             className="pl-10 focus-visible:ring-1"
                         />
                         <LockKeyhole className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none" />
+                        {
+                            errors && <span className="text-sm text-red-500">{errors.password}</span>
+
+                        }
                     </div>
                 </div>
 
@@ -98,6 +115,10 @@ const SignUp = () => {
                             className="pl-10 focus-visible:ring-1"
                         />
                         <PhoneCallIcon className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none" />
+                        {
+                            errors && <span className="text-sm text-red-500">{errors.contact}</span>
+
+                        }
                     </div>
                 </div>
 
@@ -118,7 +139,7 @@ const SignUp = () => {
                 </div>
               
               <Separator/>
-              <p className="mt-1">
+              <p className="mt-1 text-center">
                Already have an account?{"  "}
                 <Link to="/login" className="text-violet-500">Login</Link>
               </p>

@@ -4,14 +4,9 @@ import { Loader2, LockKeyhole, Mail } from "lucide-react"
 import { Separator } from "@radix-ui/react-separator";
 import { Link } from "react-router-dom";
 import { useState,ChangeEvent, FormEvent } from "react";
+import { LoginInputState, userLoginSchema } from "@/schema/userSchema";
 
 // Typescript me type define krne ka 2 tarika 
-
-
-type LoginInputState = {
-    email: string,
-    password: string
-}
 
 const Login = () => {
 
@@ -20,6 +15,7 @@ const Login = () => {
         password:""
     });
 
+    const [errors,setErrors] = useState<Partial<LoginInputState>>({});
 
     const changeEventHandler = (e: ChangeEvent<HTMLInputElement>) =>{
         e.preventDefault();
@@ -32,14 +28,22 @@ const Login = () => {
 
     const loginHandler = (e:FormEvent)=>{
         e.preventDefault();
+        const result = userLoginSchema.safeParse(input);
+
+        if(!result.success){
+            const fieldErrors = result.error.formErrors.fieldErrors;
+            setErrors(fieldErrors as Partial<LoginInputState>);
+            return;
+        }
         console.log(input);
+        setErrors({});
     }
     const loading = false;
 
     return (
         <div className="flex items-center justify-center min-h-screen">
             <form onSubmit={loginHandler} className="md:p-8 w-full max-w-md rounded-lg md:border border border-gray-200 mx-4">
-                <div className="mb-4">
+                <div className="mb-4 text-center">
                     <h1 className="font-bold text-2xl">Kp-Hotel's</h1>
                 </div>
                 <div className="mb-4">
@@ -53,6 +57,9 @@ const Login = () => {
                             className="pl-10 focus-visible:ring-1"
                         />
                         <Mail className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none" />
+                        {
+                            errors && <span className="text-sm text-red-500">{errors.email}</span>
+                        }
                     </div>
                 </div>
 
@@ -67,6 +74,9 @@ const Login = () => {
                             className="pl-10 focus-visible:ring-1"
                         />
                         <LockKeyhole className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none" />
+                        {
+                            errors && <span className="text-sm text-red-500">{errors.password}</span>
+                        }
                     </div>
                 </div>
 
@@ -84,10 +94,14 @@ const Login = () => {
                         )
                     }
 
+                <div className="mt-4 text-center">
+                <Link to="/forgot-password" className="text-violet-500">Forgot Password</Link>
+                </div>
+
                 </div>
               
-              <Separator/>
-              <p className="mt-1">
+                <Separator orientation="horizontal" decorative style={{ margin: '10px 0', backgroundColor: '#ddd', height: '1px' }} />
+              <p className="mt-2 text-center">
                 Don't have an account?{"  "}
                 <Link to="/signup" className="text-violet-500">SignUp</Link>
               </p>

@@ -1,0 +1,1 @@
+export const img1:string = "https://img.freepik.com/free-photo/top-view-table-full-delicious-food-composition_23-2149141352.jpg?t=st=1730540646~exp=1730544246~hmac=4d87a174f0cda5718aed2b483d460160088df8e1027b307c2232da9a8842d1e2&w=1480";

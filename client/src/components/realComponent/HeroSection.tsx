@@ -2,15 +2,11 @@ import { useState } from "react";
 import { Input } from "../ui/input";
 import { Search } from "lucide-react";
 import { Button } from "../ui/button";
+import { useNavigate } from "react-router-dom";
 
 const HeroSection = ()=>{
    const [searchText,setSearchText] = useState<string>("");
-   const backgroundImageStyle = {
-      backgroundImage:
-        "url('https://images.pexels.com/photos/372882/pexels-photo-372882.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')",
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-    };
+   const navigate = useNavigate();
    return(
       <div className="flex flex-col md:flex-row max-w-7xl mx-auto md:p-10 rounded-lg items-center justify-center m-4 gap-20">
         <div className="flex flex-col gap-10 md:w-[40%]">
@@ -30,7 +26,7 @@ const HeroSection = ()=>{
                className="pl-10 border-2 shadow-lg"
              />
              <Search className="text-gray-500 absolute inset-y-2 left-2"/>
-             <Button className="bg-amber-500 hover:bg-amber-700">Search</Button>
+             <Button onClick={()=> navigate(`/search/${searchText}`) } className="bg-amber-500 hover:bg-amber-700">Search</Button>
             </div>
         </div>
         <div>

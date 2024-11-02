@@ -1,14 +1,14 @@
-import MainLayout from './MainLayout';
 import Login from './pages/auth/Login';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import SignUp from './pages/auth/SignUp';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import ResetPassword from './pages/auth/ResetPassword';
 import VerifyEmail from './pages/auth/VerifyEmail';
+import Navbar from './components/realComponent/Navbar';
 const appRouter = createBrowserRouter([
   {
     path:"/",
-    element:<MainLayout/>,
+    element:<Navbar/>,
     // children:[
     //   {
     //     path:"/logiin"

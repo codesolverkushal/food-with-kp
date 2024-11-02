@@ -4,16 +4,19 @@ import SignUp from './pages/auth/SignUp';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import ResetPassword from './pages/auth/ResetPassword';
 import VerifyEmail from './pages/auth/VerifyEmail';
-import Navbar from './components/realComponent/Navbar';
+import HeroSection from './components/realComponent/HeroSection';
+import MainLayout from './layout/MainLayout';
 const appRouter = createBrowserRouter([
   {
     path:"/",
-    element:<Navbar/>,
-    // children:[
-    //   {
-    //     path:"/logiin"
-    //   }
-    // ]
+    element:<MainLayout/>,
+    children:[
+      {
+        path:"/",
+        element:<HeroSection/>
+      },
+     
+    ]
   },
   {
     path:"/login",

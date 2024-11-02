@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom"
-import Filter from "./Filter";
+import Filter from "./FilterPage";
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { Button } from "../ui/button";

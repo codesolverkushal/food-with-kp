@@ -2,6 +2,7 @@
 import { img3 } from "@/contants/data";
 import { Timer } from "lucide-react";
 import { Badge } from "../ui/badge";
+import AvailableMenu from "./AvailableMenu";
 
 
 const RestaurantDetail = () => {
@@ -39,7 +40,7 @@ const RestaurantDetail = () => {
                         </div>
                     </div>
                 </div>
-
+                <AvailableMenu/>
             </div>
         </div>
     );

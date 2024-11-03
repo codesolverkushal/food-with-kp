@@ -11,6 +11,7 @@ import SearchPage from './components/realComponent/SearchPage';
 import RestaurantDetail from './components/realComponent/RestaurantDetail';
 import Cart from './components/realComponent/Cart';
 import Restaurant from './admin/Restaurant';
+import AddMenu from './admin/AddMenu';
 const appRouter = createBrowserRouter([
   {
     path:"/",
@@ -39,6 +40,10 @@ const appRouter = createBrowserRouter([
       {
         path:"/admin/restaurant",
         element:<Restaurant/>
+      },
+      {
+        path:"/admin/menu",
+        element:<AddMenu/>
       },
      
     ]

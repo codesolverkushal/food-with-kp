@@ -3,6 +3,7 @@ KP-HOTEL'S
 Delicious food, delivered to you.
 KP-HOTEL'S is a comprehensive food delivery application where users can order from a wide range of restaurants, explore menus, and get food delivered right to their doorstep. Built using React.js, Node.js, Express, JWT Token, Zod, Zustand, and Tailwind CSS, this project aims to provide an intuitive and seamless user experience for food lovers.
 
+![App Banner](https://media0.giphy.com/media/abJN71IWfrVYY/giphy.gif?cid=ecf05e47v0z8b6wqmcrpmf6pqy0gcq922mh4t09pf6cizd9r&ep=v1_stickers_search&rid=giphy.gif&ct=s)
 
 Features
 

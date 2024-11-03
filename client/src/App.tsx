@@ -13,6 +13,7 @@ import Cart from './components/realComponent/Cart';
 import Restaurant from './admin/Restaurant';
 import AddMenu from './admin/AddMenu';
 import Orders from './admin/Orders';
+import Order from './components/realComponent/Order';
 const appRouter = createBrowserRouter([
   {
     path:"/",
@@ -37,6 +38,10 @@ const appRouter = createBrowserRouter([
       {
         path:"/cart",
         element:<Cart/>
+      },
+      {
+        path:"/order/status",
+        element:<Order/>
       },
       {
         path:"/admin/restaurant",

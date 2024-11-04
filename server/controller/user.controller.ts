@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { User } from "../models/user.model";
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
+import cloudinary from "../utils/cloudinary";
 
 export const signUp = async (req: Request, res: Response): Promise<void> => {
 
@@ -72,16 +73,13 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
 };
 
-export const verifyEmail = async (req: Request, res: Response) => {
+export const verifyEmail = async (req: Request, res: Response): Promise<void> => {
     try {
         const { verificationCode } = req.body;
         const user = await User.findOne({ verificationToken: verificationCode, verificationTokenExpiresAt: { $gt: Date.now() } }).select("-password");
 
         if (!user) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid or expired verification token"
-            });
+            throw new Error("Invalid or expired verification token");
         }
         user.isVerified = true;
         user.verificationToken = undefined;
@@ -91,7 +89,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
         // send welcome email
         // await sendWelcomeEmail(user.email, user.fullname);
 
-        return res.status(200).json({
+        res.status(200).json({
             success: true,
             message: "Email verified successfully.",
             user,
@@ -100,8 +98,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
     } catch (error: any) {
         res.status(500).send({ message: error.message })
     }
-}
-
+};
 
 export const logout = async (req: Request, res: Response) => {
     try {
@@ -114,7 +111,6 @@ export const logout = async (req: Request, res: Response) => {
         return res.status(500).json({ message: "Internal server error" })
     }
 };
-
 
 export const forgotPassword = async (req: Request, res: Response) => {
     try {
@@ -147,6 +143,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
 export const resetPassword = async (req: Request, res: Response) => {
     try {
         const { token } = req.params;
@@ -171,6 +168,49 @@ export const resetPassword = async (req: Request, res: Response) => {
         return res.status(200).json({
             success: true,
             message: "Password reset successfully."
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+export const checkAuth = async(req:Request, res:Response)=>{
+    try{
+        const userId = req.id;
+        const user = await User.findById(userId).select("-password");
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        };
+        return res.status(200).json({
+            success: true,
+            user
+        });
+
+    }catch(error:any){
+        return res.status(500).send({message: error.message})
+    }
+};
+
+export const updateProfile = async (req: Request, res: Response) => {
+    try {
+        const userId = req.id;
+        const { fullname, email, address, city, country, profilePicture } = req.body;
+        // upload image on cloudinary
+        let cloudResponse: any;
+        // cloudResponse = await cloudinary.uploader.upload(profilePicture);
+        cloudResponse = await cloudinary.uploader.upload(profilePicture);
+        const updatedData = {fullname, email, address, city, country, profilePicture};
+
+        const user = await User.findByIdAndUpdate(userId, updatedData,{new:true}).select("-password");
+
+        return res.status(200).json({
+            success:true,
+            user,
+            message:"Profile updated successfully"
         });
     } catch (error) {
         console.error(error);

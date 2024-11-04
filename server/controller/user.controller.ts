@@ -5,6 +5,7 @@ import crypto from 'crypto';
 import cloudinary from "../utils/cloudinary";
 import { generateToken } from "../utils/generateToken";
 import { generateVerificationCode } from "../utils/generateVerificationCode";
+import { sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/email";
 
 export const signUp = async (req: Request, res: Response): Promise<void> => {
 
@@ -29,8 +30,9 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
         })
 
         generateToken(res,user);
+        
 
-        // await sendVerificationEmail(email,verificationToken);
+        await sendVerificationEmail(email,verificationToken);
 
         const userWtPassword = await User.findOne({ email }).select("-password");
         res.status(200).json({
@@ -58,7 +60,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             throw new Error("Invalid Credentials!")
         }
 
-        // generateToken(res,user);
+        generateToken(res,user);
 
         user.lastLogin = new Date();
         await user.save();
@@ -89,7 +91,7 @@ export const verifyEmail = async (req: Request, res: Response): Promise<void> =>
         await user.save();
 
         // send welcome email
-        // await sendWelcomeEmail(user.email, user.fullname);
+        await sendWelcomeEmail(user.email, user.fullname);
 
         res.status(200).json({
             success: true,

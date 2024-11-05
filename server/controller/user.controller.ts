@@ -5,7 +5,7 @@ import crypto from 'crypto';
 import cloudinary from "../utils/cloudinary";
 import { generateToken } from "../utils/generateToken";
 import { generateVerificationCode } from "../utils/generateVerificationCode";
-import { sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/email";
+import { sendPasswordResetEmail, sendResetSuccessEmail, sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/email";
 
 export const signUp = async (req: Request, res: Response): Promise<void> => {
 
@@ -136,7 +136,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
         await user.save();
 
         // send email
-        // await sendPasswordResetEmail(user.email, `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`);
+        await sendPasswordResetEmail(user.email, `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`);
 
         return res.status(200).json({
             success: true,
@@ -167,7 +167,7 @@ export const resetPassword = async (req: Request, res: Response) => {
         await user.save();
 
         // send success reset email
-        // await sendResetSuccessEmail(user.email);
+        await sendResetSuccessEmail(user.email);
 
         return res.status(200).json({
             success: true,
@@ -205,7 +205,6 @@ export const updateProfile = async (req: Request, res: Response) => {
         const { fullname, email, address, city, country, profilePicture } = req.body;
         // upload image on cloudinary
         let cloudResponse: any;
-        // cloudResponse = await cloudinary.uploader.upload(profilePicture);
         cloudResponse = await cloudinary.uploader.upload(profilePicture);
         const updatedData = {fullname, email, address, city, country, profilePicture};
 

@@ -7,7 +7,7 @@ import { generateToken } from "../utils/generateToken";
 import { generateVerificationCode } from "../utils/generateVerificationCode";
 import { sendPasswordResetEmail, sendResetSuccessEmail, sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/email";
 
-export const signUp = async (req: Request, res: Response): Promise<void> => {
+export const signup = async (req: Request, res: Response): Promise<void> => {
 
     try {
         const { fullname, email, password, contact } = req.body;
@@ -104,7 +104,7 @@ export const verifyEmail = async (req: Request, res: Response): Promise<void> =>
     }
 };
 
-export const logout = async (req: Request, res: Response) => {
+export const logout = async (req: Request, res: Response): Promise<any> => {
     try {
         return res.clearCookie("token").status(200).json({
             success: true,
@@ -116,7 +116,7 @@ export const logout = async (req: Request, res: Response) => {
     }
 };
 
-export const forgotPassword = async (req: Request, res: Response) => {
+export const forgotPassword = async (req: Request, res: Response): Promise<any> => {
     try {
         const { email } = req.body;
         const user = await User.findOne({ email });
@@ -148,7 +148,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
     }
 };
 
-export const resetPassword = async (req: Request, res: Response) => {
+export const resetPassword = async (req: Request, res: Response): Promise<any> => {
     try {
         const { token } = req.params;
         const { newPassword } = req.body;
@@ -179,7 +179,7 @@ export const resetPassword = async (req: Request, res: Response) => {
     }
 };
 
-export const checkAuth = async(req:Request, res:Response)=>{
+export const checkAuth = async(req:Request, res:Response): Promise<any>=>{
     try{
         const userId = req.id;
         const user = await User.findById(userId).select("-password");
@@ -199,7 +199,7 @@ export const checkAuth = async(req:Request, res:Response)=>{
     }
 };
 
-export const updateProfile = async (req: Request, res: Response) => {
+export const updateProfile = async (req: Request, res: Response): Promise<any> => {
     try {
         const userId = req.id;
         const { fullname, email, address, city, country, profilePicture } = req.body;

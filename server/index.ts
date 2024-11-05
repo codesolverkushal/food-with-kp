@@ -6,6 +6,7 @@ import userRouter from './routes/user.route';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import restauRouter from './routes/restaurant.route';
+import menuRouter from './routes/menu.route';
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use(cors(corsOptions));
 
 app.use("/api/v1/user",userRouter);
 app.use("/api/v1/restaurant", restauRouter);
+app.use("/api/v1/menu", menuRouter);
 
 
 

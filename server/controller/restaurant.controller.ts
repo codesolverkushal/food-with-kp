@@ -1,6 +1,7 @@
 import { Request,Response } from "express";
 import { Restaurant } from "../models/restaurant.model";
 import uploadImageOnCloudinary from "../utils/uploadImage";
+import { Order } from "../models/order.model";
 
 
 export const createRestaurant = async (req: Request, res: Response): Promise<any> => {
@@ -54,7 +55,6 @@ export const getRestaurant = async (req: Request, res: Response): Promise<any> =
     }
 };
 
-
 export const updateRestaurant = async (req: Request, res: Response): Promise<any> => {
     try {
         const { restaurantName, city, country, deliveryTime, cuisines } = req.body;
@@ -88,4 +88,51 @@ export const updateRestaurant = async (req: Request, res: Response): Promise<any
         console.log(error);
         return res.status(500).json({ message: "Internal server error" })
     }
-}
+};
+
+export const getRestaurantOrder = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const restaurant = await Restaurant.findOne({ user: req.id });
+        if (!restaurant) {
+            return res.status(404).json({
+                success: false,
+                message: "Restaurant not found"
+            })
+        };
+        const orders = await Order.find({ restaurant: restaurant._id }).populate('restaurant').populate('user');
+        return res.status(200).json({
+            success: true,
+            orders
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" })
+    }
+};
+
+export const updateOrderStatus = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const { orderId } = req.params;
+        const { status } = req.body;
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({
+                success: false,
+                message: "Order not found"
+            })
+        }
+        order.status = status;
+        await order.save();
+        return res.status(200).json({
+            success: true,
+            status:order.status,
+            message: "Status updated"
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" })
+    }
+};
+
+

@@ -135,4 +135,63 @@ export const updateOrderStatus = async (req: Request, res: Response): Promise<an
     }
 };
 
+export const searchRestaurant = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const searchText = req.params.searchText || "";
+        const searchQuery = req.query.searchQuery as string || "";
+        const selectedCuisines = (req.query.selectedCuisines as string || "").split(",").filter(cuisine => cuisine);
+        const query: any = {};
+        // basic search based on searchText (name ,city, country)
+        console.log(selectedCuisines);
+        
+        if (searchText) {
+            query.$or = [
+                { restaurantName: { $regex: searchText, $options: 'i' } },
+                { city: { $regex: searchText, $options: 'i' } },
+                { country: { $regex: searchText, $options: 'i' } },
+            ]
+        }
+        // filter on the basis of searchQuery
+        if (searchQuery) {
+            query.$or = [
+                { restaurantName: { $regex: searchQuery, $options: 'i' } },
+                { cuisines: { $regex: searchQuery, $options: 'i' } }
+            ]
+        }
+        // console.log(query);
+        // ["ist","second","third"]
+        
+        if(selectedCuisines.length > 0){
+            query.cuisines = {$in:selectedCuisines}
+        }
+        
+        const restaurants = await Restaurant.find(query);
+        return res.status(200).json({
+            success:true,
+            data:restaurants
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" })
+    }
+};
 
+export const getSingleRestaurant = async (req:Request, res:Response): Promise<any> => {
+    try {
+        const restaurantId = req.params.id;
+        const restaurant = await Restaurant.findById(restaurantId).populate({
+            path:'menus',
+            options:{createdAt:-1}
+        });
+        if(!restaurant){
+            return res.status(404).json({
+                success:false,
+                message:"Restaurant not found"
+            })
+        };
+        return res.status(200).json({success:true, restaurant});
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" })
+    }
+};

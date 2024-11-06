@@ -7,18 +7,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
 
 import { Separator } from "@radix-ui/react-separator";
-import useCartStore from "@/store/useCartStore";
+
 
 const Navbar = () => {
   const admin = true;
-  const {count,increment,decrement} = useCartStore();
 
   return (
     <div className="max-w-7xl mx-auto">
       <div className="flex items-center justify-between h-14">
         <Link to="/">
           <h1  className="text-2xl font-bold text-blue-800 tracking-wide">
-            KP Hotel'<span className="text-3xl text-blue-500 font-mono">{count}</span>
+            KP Hotel'<span className="text-3xl text-blue-500 font-mono">s</span>
           </h1>
         </Link>
 
@@ -82,7 +81,7 @@ const Navbar = () => {
               <AvatarImage />
               <AvatarFallback>KP</AvatarFallback>
             </Avatar>
-            <Button onClick={increment} className="bg-orange hover:bg-hoverOrange">Logout</Button>
+            <Button className="bg-orange hover:bg-hoverOrange">Logout</Button>
           </div>
         </div>
         <div className="md:hidden lg:hidden">

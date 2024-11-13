@@ -116,7 +116,7 @@ const useUserStore = create<UserState>()(
 
                     if (response.data.success) { 
                         toast.success(response.data.message);
-                        set({ loading: false, user: null, isAuthenticated: true });
+                        set({ loading: false, user: null, isAuthenticated: false});
                     }
                 } catch (error: any) {
                     toast.error(error.response.data.message || "Logout Failed!");

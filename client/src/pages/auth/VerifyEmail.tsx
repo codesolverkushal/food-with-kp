@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import useUserStore from "@/store/useUserStore";
-import { FormEvent, useRef, useState } from "react"
+import { FormEvent, useRef, useState } from "react";
 
 const VerifyEmail = () => {
 
@@ -65,8 +65,10 @@ const VerifyEmail = () => {
                         <Button className="bg-amber-600 hover:bg-amber-800
                  mt-6 w-full">Verify</Button>
                     )
-                }
+                }          
+
             </form>
+            
         </div>
     </div>
   )

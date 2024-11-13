@@ -15,17 +15,20 @@ import AddMenu from './admin/AddMenu';
 import Orders from './admin/Orders';
 import Order from './components/realComponent/Order';
 import useUserStore from './store/useUserStore';
+import { useEffect } from 'react';
+import LoadingPage from './skeleton/LoadingPage';
 
 
 const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, user } = useUserStore();
+  console.log(isAuthenticated);
 
   if (!isAuthenticated) {
     // Redirect to login if not authenticated
     return <Navigate to="/login" replace />;
   }
 
-  if (isAuthenticated && !user?.isVerified) {
+  if (!user?.isVerified) {
     // Redirect to verify-email only if authenticated but not verified
     return <Navigate to="/verify-email" replace />;
   }
@@ -119,7 +122,13 @@ const appRouter = createBrowserRouter([
   }
 ])
 function App() {
+  const {checkAuthentication, isCheckingAuth} = useUserStore();
+ 
+  useEffect(()=>{
+    checkAuthentication();
+  },[checkAuthentication])
 
+  if(isCheckingAuth) return <LoadingPage/>
 
   return (
     <>

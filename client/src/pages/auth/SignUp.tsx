@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Loader2, LockKeyhole, Mail, PhoneCallIcon, User } from "lucide-react"
 import { Separator } from "@radix-ui/react-separator";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState,ChangeEvent, FormEvent } from "react";
 import { SignupInputState, userSignUpSchema } from "@/schema/userSchema";
 import useUserStore from "@/store/useUserStore";
@@ -11,7 +11,8 @@ import useUserStore from "@/store/useUserStore";
 // Typescript me type define krne ka 2 tarika 
 
 const SignUp = () => {
-    // const loading = false;
+   
+    const navigate = useNavigate();
 
     const [input,setInput] = useState<SignupInputState>({
         fullname:"",
@@ -45,7 +46,12 @@ const SignUp = () => {
         }
 
         // Api fetching from backend...
-        await signup(input);
+        try{
+            await signup(input);
+            navigate("/verify-email");            
+        }catch(error){
+            console.log(error);
+        }
     }
    
 

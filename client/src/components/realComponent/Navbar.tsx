@@ -11,19 +11,20 @@ import useUserStore from "@/store/useUserStore";
 
 
 const Navbar = () => {
-  const admin = true;
 
-  const {logout} = useUserStore();
+  const { user, loading } = useUserStore();
 
-  const logoutHandler = async ()=>{
-      await logout();
+  const { logout } = useUserStore();
+
+  const logoutHandler = async () => {
+    await logout();
   }
 
   return (
     <div className="max-w-7xl mx-auto">
       <div className="flex items-center justify-between h-14">
         <Link to="/">
-          <h1  className="text-2xl font-bold text-blue-800 tracking-wide">
+          <h1 className="text-2xl font-bold text-blue-800 tracking-wide">
             KP Hotel'<span className="text-3xl text-blue-500 font-mono">s</span>
           </h1>
         </Link>
@@ -35,7 +36,7 @@ const Navbar = () => {
             <Link to="/order/status">Order</Link>
 
             {
-              admin && (
+              user?.admin && (
                 <Menubar>
                   <MenubarMenu>
                     <MenubarTrigger>
@@ -106,9 +107,10 @@ export default Navbar;
 
 const MobileNavbar = () => {
 
-  const {logout} = useUserStore();
+  const {user} = useUserStore();
+  const { logout } = useUserStore();
 
-  const logoutHandler = async ()=>{
+  const logoutHandler = async () => {
     await logout();
   }
 
@@ -159,31 +161,37 @@ const MobileNavbar = () => {
             <ShoppingBag />
             <span>Cart {0}</span>
           </Link>
-          <Link to="/admin/menu" className="flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900">
-            <SquareMenu />
-            <span>Menu</span>
-          </Link>
-          <Link to="/admin/restaurant" className="flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900">
-            <UtensilsCrossed />
-            <span>Restaurant</span>
-          </Link>
-          <Link to="/admin/orders" className="flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900">
-            <PackageCheck />
-            <span>Order's</span>
-          </Link>
+          {
+            user?.admin && (
+              <>
+                <Link to="/admin/menu" className="flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900">
+                  <SquareMenu />
+                  <span>Menu</span>
+                </Link>
+                <Link to="/admin/restaurant" className="flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900">
+                  <UtensilsCrossed />
+                  <span>Restaurant</span>
+                </Link>
+                <Link to="/admin/orders" className="flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900">
+                  <PackageCheck />
+                  <span>Order's</span>
+                </Link>
+              </>
+            )
+          }
         </SheetDescription>
         <SheetFooter className="flex flex-col gap-5">
-                <div className="flex flex-row items-center gap-2">
-                  <Avatar>
-                    <AvatarImage />
-                    <AvatarFallback>KP</AvatarFallback>
-                  </Avatar>
-                  <h1 className="font-bold">KP-Hotel's</h1>
-                </div>          
-              <SheetClose asChild>
-                <Button onClick={logoutHandler} type="submit" className="bg-amber-500 hover:bg-amber-600">Logout</Button>
-              </SheetClose>
-        
+          <div className="flex flex-row items-center gap-2">
+            <Avatar>
+              <AvatarImage />
+              <AvatarFallback>KP</AvatarFallback>
+            </Avatar>
+            <h1 className="font-bold">KP-Hotel's</h1>
+          </div>
+          <SheetClose asChild>
+            <Button onClick={logoutHandler} type="submit" className="bg-amber-500 hover:bg-amber-600">Logout</Button>
+          </SheetClose>
+
         </SheetFooter>
       </SheetContent>
     </Sheet>

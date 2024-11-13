@@ -1,5 +1,5 @@
 import Login from './pages/auth/Login';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import SignUp from './pages/auth/SignUp';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import ResetPassword from './pages/auth/ResetPassword';
@@ -14,10 +14,49 @@ import Restaurant from './admin/Restaurant';
 import AddMenu from './admin/AddMenu';
 import Orders from './admin/Orders';
 import Order from './components/realComponent/Order';
+import useUserStore from './store/useUserStore';
+
+
+const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, user } = useUserStore();
+
+  if (!isAuthenticated) {
+    // Redirect to login if not authenticated
+    return <Navigate to="/login" replace />;
+  }
+
+  if (isAuthenticated && !user?.isVerified) {
+    // Redirect to verify-email only if authenticated but not verified
+    return <Navigate to="/verify-email" replace />;
+  }
+
+  return children;
+};
+
+const AuthenticatedUser = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, user } = useUserStore();
+  if(isAuthenticated && user?.isVerified){
+    return <Navigate to="/" replace/>
+  }
+  return children;
+};
+
+const AdminRoute = ({children}:{children:React.ReactNode}) => {
+  const {user, isAuthenticated} = useUserStore();
+  if(!isAuthenticated){
+    return <Navigate to="/login" replace/>
+  }
+  if(!user?.admin){
+    return <Navigate to="/" replace/>
+  }
+
+  return children;
+}
+
 const appRouter = createBrowserRouter([
   {
     path:"/",
-    element:<MainLayout/>,
+    element:<ProtectedRoutes><MainLayout/></ProtectedRoutes>,
     children:[
       {
         path:"/",
@@ -45,38 +84,38 @@ const appRouter = createBrowserRouter([
       },
       {
         path:"/admin/restaurant",
-        element:<Restaurant/>
+        element:<AdminRoute><Restaurant/></AdminRoute>
       },
       {
         path:"/admin/menu",
-        element:<AddMenu/>
+        element:<AdminRoute><AddMenu/></AdminRoute>
       },
       {
         path:"/admin/orders",
-        element:<Orders/>
+        element:<AdminRoute><Orders/></AdminRoute>
       },
      
     ]
   },
   {
     path:"/login",
-    element:<Login/>
+    element:<AuthenticatedUser><Login/></AuthenticatedUser>
   },
   {
     path:"/signup",
-    element:<SignUp/>
+    element:<AuthenticatedUser><SignUp/></AuthenticatedUser>
   },
   {
     path:"/forgot-password",
-    element:<ForgotPassword/>
+    element:<AuthenticatedUser><ForgotPassword/></AuthenticatedUser>
   },
   {
     path:"/reset-password",
-    element:<ResetPassword/>
+    element:<AuthenticatedUser><ResetPassword/></AuthenticatedUser>
   },
   {
     path:"/verify-email",
-    element:<VerifyEmail/>
+    element:<AuthenticatedUser><VerifyEmail/></AuthenticatedUser>
   }
 ])
 function App() {

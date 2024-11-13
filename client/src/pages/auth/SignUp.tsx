@@ -5,11 +5,13 @@ import { Separator } from "@radix-ui/react-separator";
 import { Link } from "react-router-dom";
 import { useState,ChangeEvent, FormEvent } from "react";
 import { SignupInputState, userSignUpSchema } from "@/schema/userSchema";
+import useUserStore from "@/store/useUserStore";
 
 
 // Typescript me type define krne ka 2 tarika 
 
 const SignUp = () => {
+    // const loading = false;
 
     const [input,setInput] = useState<SignupInputState>({
         fullname:"",
@@ -19,6 +21,8 @@ const SignUp = () => {
     });
     
     const [errors,setErrors] = useState<Partial<SignupInputState>>({});
+
+    const {signup,loading} = useUserStore();
 
 
     const changeEventHandler = (e: ChangeEvent<HTMLInputElement>) =>{
@@ -30,7 +34,7 @@ const SignUp = () => {
         setInput({...input,[name]:value});
     }
 
-    const loginHandler = (e:FormEvent)=>{
+    const loginHandler = async (e:FormEvent)=>{
         e.preventDefault();
 
         const result = userSignUpSchema.safeParse(input);
@@ -41,9 +45,9 @@ const SignUp = () => {
         }
 
         // Api fetching from backend...
-        console.log(input);
+        await signup(input);
     }
-    const loading = false;
+   
 
     return (
         <div className="flex items-center justify-center min-h-screen">

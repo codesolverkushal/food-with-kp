@@ -7,17 +7,56 @@ import { generateToken } from "../utils/generateToken";
 import { generateVerificationCode } from "../utils/generateVerificationCode";
 import { sendPasswordResetEmail, sendResetSuccessEmail, sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/email";
 
-export const signup = async (req: Request, res: Response): Promise<void> => {
+// export const signup = async (req: Request, res: Response): Promise<void> => {
 
+//     try {
+//         const { fullname, email, password, contact } = req.body;
+
+//         let user = await User.findOne({ email });
+//         if (user) {
+//             throw new Error("Email is already registered!")
+//         }
+//         const hashedPassword = await bcrypt.hash(password, 10);
+
+//         const verificationToken =  generateVerificationCode();
+
+//         user = await User.create({
+//             fullname,
+//             email,
+//             password: hashedPassword,
+//             contact: Number(contact),
+//             verificationToken,
+//             verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000,
+//         })
+
+//         generateToken(res,user);
+        
+
+//         await sendVerificationEmail(email,verificationToken);
+
+//         const userWtPassword = await User.findOne({ email }).select("-password");
+//         res.status(200).json({
+//             message: "Welcome to our team!",
+//             user: userWtPassword
+//         })
+//     } catch (error: any) {
+//         console.log(error);
+//         res.status(500).send({ message: error.message });
+//     }
+// };
+
+export const signup = async (req: Request, res: Response): Promise<any> => {
     try {
         const { fullname, email, password, contact } = req.body;
 
         let user = await User.findOne({ email });
         if (user) {
-            throw new Error("Email is already registered!")
+            return res.status(400).json({
+                success: false,
+                message: "User already exist with this email"
+            })
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-
         const verificationToken =  generateVerificationCode();
 
         user = await User.create({
@@ -28,20 +67,19 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
             verificationToken,
             verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000,
         })
-
         generateToken(res,user);
-        
 
-        await sendVerificationEmail(email,verificationToken);
+        await sendVerificationEmail(email, verificationToken);
 
-        const userWtPassword = await User.findOne({ email }).select("-password");
-        res.status(200).json({
-            message: "Welcome to our team!",
-            user: userWtPassword
-        })
-    } catch (error: any) {
+        const userWithoutPassword = await User.findOne({ email }).select("-password");
+        return res.status(201).json({
+            success: true,
+            message: "Account created successfully",
+            user: userWithoutPassword
+        });
+    } catch (error) {
         console.log(error);
-        res.status(500).send({ message: error.message });
+        return res.status(500).json({ message: "Internal server error" })
     }
 };
 

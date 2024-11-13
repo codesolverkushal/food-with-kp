@@ -5,6 +5,7 @@ import { Separator } from "@radix-ui/react-separator";
 import { Link } from "react-router-dom";
 import { useState,ChangeEvent, FormEvent } from "react";
 import { LoginInputState, userLoginSchema } from "@/schema/userSchema";
+import useUserStore from "@/store/useUserStore";
 
 // Typescript me type define krne ka 2 tarika 
 
@@ -14,8 +15,12 @@ const Login = () => {
         email:"",
         password:""
     });
+    
 
     const [errors,setErrors] = useState<Partial<LoginInputState>>({});
+
+    const {loading,login} = useUserStore();
+    console.log(loading);
 
     const changeEventHandler = (e: ChangeEvent<HTMLInputElement>) =>{
         e.preventDefault();
@@ -26,7 +31,7 @@ const Login = () => {
         setInput({...input,[name]:value});
     }
 
-    const loginHandler = (e:FormEvent)=>{
+    const loginHandler = async (e:FormEvent)=>{
         e.preventDefault();
         const result = userLoginSchema.safeParse(input);
 
@@ -35,10 +40,9 @@ const Login = () => {
             setErrors(fieldErrors as Partial<LoginInputState>);
             return;
         }
-        console.log(input);
-        setErrors({});
+        await login(input);
     }
-    const loading = false;
+ 
 
     return (
         <div className="flex items-center justify-center min-h-screen">

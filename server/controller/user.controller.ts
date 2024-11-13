@@ -83,45 +83,51 @@ export const signup = async (req: Request, res: Response): Promise<any> => {
     }
 };
 
-export const login = async (req: Request, res: Response): Promise<void> => {
-
+export const login = async (req: Request, res: Response): Promise<any> => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
         if (!user) {
-            throw new Error("Invalid Credentials!");
+            return res.status(400).json({
+                success: false,
+                message: "Incorrect email or password"
+            });
         }
-
-        const checkPassword = await bcrypt.compare(password, user.password);
-
-        if (!checkPassword) {
-            throw new Error("Invalid Credentials!")
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        if (!isPasswordMatch) {
+            return res.status(400).json({
+                success: false,
+                message: "Incorrect email or password"
+            });
         }
-
-        generateToken(res,user);
-
+        generateToken(res, user);
         user.lastLogin = new Date();
         await user.save();
 
-        const userWtPassword = await User.find({ email }).select("-password");
-
-        res.status(200).send({
-            message: "Logged In successfully!",
-            user: userWtPassword
-        })
-    } catch (error: any) {
-        res.status(500).send({ message: error.message })
+        // send user without passowrd
+        const userWithoutPassword = await User.findOne({ email }).select("-password");
+        return res.status(200).json({
+            success: true,
+            message: `Welcome back ${user.fullname}`,
+            user: userWithoutPassword
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" })
     }
-
 };
 
-export const verifyEmail = async (req: Request, res: Response): Promise<void> => {
+export const verifyEmail = async (req: Request, res: Response): Promise<any> => {
     try {
         const { verificationCode } = req.body;
+       
         const user = await User.findOne({ verificationToken: verificationCode, verificationTokenExpiresAt: { $gt: Date.now() } }).select("-password");
 
         if (!user) {
-            throw new Error("Invalid or expired verification token");
+            return res.status(400).json({
+                success: false,
+                message: "Invalid or expired verification token"
+            });
         }
         user.isVerified = true;
         user.verificationToken = undefined;
@@ -131,16 +137,16 @@ export const verifyEmail = async (req: Request, res: Response): Promise<void> =>
         // send welcome email
         await sendWelcomeEmail(user.email, user.fullname);
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: "Email verified successfully.",
             user,
         })
-
-    } catch (error: any) {
-        res.status(500).send({ message: error.message })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" })
     }
-};
+}
 
 export const logout = async (req: Request, res: Response): Promise<any> => {
     try {

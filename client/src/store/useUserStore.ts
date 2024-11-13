@@ -7,15 +7,32 @@ import { toast } from 'sonner';
 const API_END_POINT = "http://localhost:3000/api/v1/user";
 axios.defaults.withCredentials = true;
 
+type User = {
+    fullname:string;
+    email:string;
+    contact:number;
+    address:string;
+    city:string;
+    country:string;
+    profilePicture:string;
+    admin:boolean;
+    isVerified:boolean;
+}
+
 
 type UserState = {
-    user: null;
+    user: User | null;
     isAuthenticated: boolean;
     isCheckingAuth: boolean;
     loading: boolean;
     signup: (input: SignupInputState) => Promise<void>;
     login: (input:LoginInputState) => Promise<void>;
     verifyEmail: (verificationCode: string) => Promise<void>;
+    logout: () => Promise<void>;
+    checkAuthentication: () => Promise<void>;
+    forgotPassword: (email:string) => Promise<void>; 
+    resetPassword: (token:string, newPassword:string) => Promise<void>; 
+    updateProfile: (input:any) => Promise<void>; 
 };
 
 const useUserStore = create<UserState>()(
@@ -81,7 +98,73 @@ const useUserStore = create<UserState>()(
                     set({ loading: false });
                 }
             },
+            checkAuthentication: async () => {
+                try {
+                    set({ isCheckingAuth: true });
+                    const response = await axios.get(`${API_END_POINT}/check-auth`);
+                    if (response.data.success) {
+                        set({user: response.data.user, isAuthenticated: true, isCheckingAuth: false });
+                    }
+                } catch (error) {
+                    set({isAuthenticated: false, isCheckingAuth: false });
+                }
+            },
+            logout: async () => {
+                try {
+                    set({ loading: true });
+                    const response = await axios.post(`${API_END_POINT}/logout`);
 
+                    if (response.data.success) { 
+                        toast.success(response.data.message);
+                        set({ loading: false, user: null, isAuthenticated: true });
+                    }
+                } catch (error: any) {
+                    toast.error(error.response.data.message || "Logout Failed!");
+                    set({ loading: false });
+                }
+            },
+
+            forgotPassword: async (email: string) => {
+                try {
+                    set({ loading: true });
+                    const response = await axios.post(`${API_END_POINT}/forgot-password`, { email });
+                    if (response.data.success) {
+                        toast.success(response.data.message);
+                        set({ loading: false });
+                    }
+                } catch (error: any) {
+                    toast.error(error.response.data.message);
+                    set({ loading: false });
+                }
+            },
+            resetPassword: async (token: string, newPassword: string) => {
+                try {
+                    set({ loading: true });
+                    const response = await axios.post(`${API_END_POINT}/reset-password/${token}`, { newPassword });
+                    if (response.data.success) {
+                        toast.success(response.data.message);
+                        set({ loading: false });
+                    }
+                } catch (error: any) {
+                    toast.error(error.response.data.message);
+                    set({ loading: false });
+                }
+            },
+            updateProfile: async (input:any) => {
+                try { 
+                    const response = await axios.put(`${API_END_POINT}/profile/update`, input,{
+                        headers:{
+                            'Content-Type':'application/json'
+                        }
+                    });
+                    if(response.data.success){
+                        toast.success(response.data.message);
+                        set({user:response.data.user, isAuthenticated:true});
+                    }
+                } catch (error:any) { 
+                    toast.error(error.response.data.message);
+                }
+            }
         }),
         {
             name: 'user-data', // Key to store data in localStorage

@@ -7,10 +7,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
 
 import { Separator } from "@radix-ui/react-separator";
+import useUserStore from "@/store/useUserStore";
 
 
 const Navbar = () => {
   const admin = true;
+
+  const {logout} = useUserStore();
+
+  const logoutHandler = async ()=>{
+      await logout();
+  }
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -81,7 +88,7 @@ const Navbar = () => {
               <AvatarImage />
               <AvatarFallback>KP</AvatarFallback>
             </Avatar>
-            <Button className="bg-orange hover:bg-hoverOrange">Logout</Button>
+            <Button onClick={logoutHandler} className="bg-orange hover:bg-hoverOrange">Logout</Button>
           </div>
         </div>
         <div className="md:hidden lg:hidden">
@@ -98,6 +105,12 @@ export default Navbar;
 
 
 const MobileNavbar = () => {
+
+  const {logout} = useUserStore();
+
+  const logoutHandler = async ()=>{
+    await logout();
+  }
 
   return (
     <Sheet>
@@ -168,7 +181,7 @@ const MobileNavbar = () => {
                   <h1 className="font-bold">KP-Hotel's</h1>
                 </div>          
               <SheetClose asChild>
-                <Button type="submit" className="bg-amber-500 hover:bg-amber-600">Logout</Button>
+                <Button onClick={logoutHandler} type="submit" className="bg-amber-500 hover:bg-amber-600">Logout</Button>
               </SheetClose>
         
         </SheetFooter>

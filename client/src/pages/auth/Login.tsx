@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Loader2, LockKeyhole, Mail } from "lucide-react"
 import { Separator } from "@radix-ui/react-separator";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState,ChangeEvent, FormEvent } from "react";
 import { LoginInputState, userLoginSchema } from "@/schema/userSchema";
 import useUserStore from "@/store/useUserStore";
@@ -15,6 +15,7 @@ const Login = () => {
         email:"",
         password:""
     });
+    const navigate = useNavigate();
     
 
     const [errors,setErrors] = useState<Partial<LoginInputState>>({});
@@ -40,7 +41,12 @@ const Login = () => {
             setErrors(fieldErrors as Partial<LoginInputState>);
             return;
         }
-        await login(input);
+        try {
+            await login(input);
+            navigate("/");
+        } catch (error) {
+            console.log(error);
+        }
     }
  
 

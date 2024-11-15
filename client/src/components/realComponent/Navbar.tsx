@@ -12,13 +12,7 @@ import useUserStore from "@/store/useUserStore";
 
 const Navbar = () => {
 
-  const { user, loading } = useUserStore();
-
-  const { logout } = useUserStore();
-
-  const logoutHandler = async () => {
-    await logout();
-  }
+  const { user, logout } = useUserStore();
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -89,7 +83,7 @@ const Navbar = () => {
               <AvatarImage />
               <AvatarFallback>KP</AvatarFallback>
             </Avatar>
-            <Button onClick={logoutHandler} className="bg-orange hover:bg-hoverOrange">Logout</Button>
+            <Button onClick={logout} className="bg-orange hover:bg-hoverOrange">Logout</Button>
           </div>
         </div>
         <div className="md:hidden lg:hidden">
@@ -107,13 +101,8 @@ export default Navbar;
 
 const MobileNavbar = () => {
 
-  const {user} = useUserStore();
-  const { logout } = useUserStore();
-
-  const logoutHandler = async () => {
-    await logout();
-  }
-
+  const {user,logout } = useUserStore();
+ 
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -189,7 +178,7 @@ const MobileNavbar = () => {
             <h1 className="font-bold">KP-Hotel's</h1>
           </div>
           <SheetClose asChild>
-            <Button onClick={logoutHandler} type="submit" className="bg-amber-500 hover:bg-amber-600">Logout</Button>
+            <Button onClick={logout} type="submit" className="bg-amber-500 hover:bg-amber-600">Logout</Button>
           </SheetClose>
 
         </SheetFooter>

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RestaurantFormSchema, restaurantSchema } from "@/schema/restaurantSchema";
+import useRestaurantStore from "@/store/useRestaurantStore";
 import { Loader2 } from "lucide-react";
 import { FormEvent, useState } from "react";
 
@@ -17,6 +18,8 @@ const Restaurant = () => {
   })
 
   const [error, setError] = useState<Partial<RestaurantFormSchema>>({});
+  const {loading} = useRestaurantStore();
+
   const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
     setInput({ ...input, [name]: type === 'number' ? Number(value) : value });
@@ -31,10 +34,10 @@ const Restaurant = () => {
       setError(fieldError as Partial<RestaurantFormSchema>);
       return;
     }
-    console.log(input);
+    
   }
 
-  const loading = false;
+  
   const restaurantExists = false;
   return (
     <div className="max-w-6xl mx-auto my-10">

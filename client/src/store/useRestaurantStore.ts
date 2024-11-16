@@ -14,8 +14,8 @@ interface RestaurantStore {
     searchRestaurant: (searchText: string, searchQuery: string, selectedCuisines: string[]) => Promise<void>;
   }
 
-const API_END_POINT = "http://localhost:3000/api/v1/restaurant";
-axios.defaults.withCredentials = true;
+  const API_END_POINT = "http://localhost:3000/api/v1/restaurant";
+  axios.defaults.withCredentials = true;
 
 const useRestaurantStore= create<RestaurantStore>()(
     persist(

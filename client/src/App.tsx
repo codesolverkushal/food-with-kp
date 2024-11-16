@@ -21,7 +21,7 @@ import LoadingPage from './skeleton/LoadingPage';
 
 const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, user } = useUserStore();
-  console.log(isAuthenticated);
+  // console.log(isAuthenticated);
 
   if (!isAuthenticated) {
     // Redirect to login if not authenticated

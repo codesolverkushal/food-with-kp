@@ -8,7 +8,6 @@ export const createRestaurant = async (req: Request, res: Response): Promise<any
     try {
         const { restaurantName, city, country, deliveryTime, cuisines } = req.body;
         const file = req.file;
-        console.log(req.body)
 
         const restaurant = await Restaurant.findOne({ user: req.id });
         if (restaurant) {

@@ -3,17 +3,44 @@ import { toast } from 'sonner';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
+export type MenuItem = {
+    _id: string;
+    name: string;
+    description: string;
+    price: number;
+    image: string;
+}
+export type Restaurant = {
+    _id: string;
+    user: string;
+    restaurantName: string;
+    city: string;
+    country: string;
+    deliveryTime: number;
+    cuisines: string[];
+    menus: MenuItem[];
+    imageUrl: string;
+}
+
+export type SearchedRestaurant = {
+    data:Restaurant[]
+}
+
+
 
 interface RestaurantStore {
     loading: boolean;
-    restaurant: any;
-    searchedRestaurant: any;
+    restaurant: Restaurant | null;
+    searchedRestaurant: SearchedRestaurant | null;
     createRestaurant: (formData: FormData) => Promise<void>;
     getRestaurant: () => Promise<void>;
     updateRestaurant: (formData: FormData) => Promise<void>;
     searchRestaurant: (searchText: string, searchQuery: string, selectedCuisines: string[]) => Promise<void>;
-    addMenuToRestaurant: (menu: any) => Promise<any>;
-    updateMenuToRestaurant: (updatedMenu: any) => Promise<any>;
+    addMenuToRestaurant: (menu: MenuItem) => void;
+    updateMenuToRestaurant: (updatedMenu: MenuItem) => void;
+    setAppliedFilter: (value: string) => void;
+    resetAppliedFilter: () => void;
+    appliedFilter: string[],
 }
 
 
@@ -26,6 +53,7 @@ export const useRestaurantStore = create<RestaurantStore>()(
             loading: false,
             restaurant: null,
             searchedRestaurant: null,
+            appliedFilter: [],
             createRestaurant: async (formData: FormData) => {
                 try {
                     set({ loading: true });
@@ -91,13 +119,13 @@ export const useRestaurantStore = create<RestaurantStore>()(
                     set({ loading: false });
                 }
             },
-            addMenuToRestaurant: async (menu: any) => {
+            addMenuToRestaurant: (menu: MenuItem) => {
                 set((state: any) => ({
                     restaurant: state.restaurant ? { ...state.restaurant, menus: [...state.restaurant.menus, menu] } : null,
                 }))
 
             },
-            updateMenuToRestaurant: async (updatedMenu: any) => {
+            updateMenuToRestaurant:  (updatedMenu: MenuItem) => {
                 set((state: any) => {
 
                     if (state.restaurant) {
@@ -113,7 +141,16 @@ export const useRestaurantStore = create<RestaurantStore>()(
                     return state;
                 })
             },
-
+            setAppliedFilter: (value: string) => {
+                set((state) => {
+                    const isAlreadyApplied = state.appliedFilter.includes(value);
+                    const updatedFilter = isAlreadyApplied ? state.appliedFilter.filter((item) => item !== value) : [...state.appliedFilter, value];
+                    return { appliedFilter: updatedFilter }
+                })
+            },
+            resetAppliedFilter: () => {
+                set({ appliedFilter: [] })
+            },
 
 
         }),

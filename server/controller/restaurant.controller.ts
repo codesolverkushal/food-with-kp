@@ -138,9 +138,7 @@ export const searchRestaurant = async (req: Request, res: Response): Promise<any
         const searchQuery = req.query.searchQuery as string || "";
         const selectedCuisines = (req.query.selectedCuisines as string || "").split(",").filter(cuisine => cuisine);
         const query: any = {};
-        // basic search based on searchText (name ,city, country)
-        console.log(selectedCuisines);
-        
+               
         if (searchText) {
             query.$or = [
                 { restaurantName: { $regex: searchText, $options: 'i' } },

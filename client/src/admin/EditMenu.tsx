@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { MenuFormSchema, menuSchema } from "@/schema/menuSchema"
+import { useMenuStore } from "@/store/useMenuStore"
 import { Loader2 } from "lucide-react"
 import React, { Dispatch, FormEvent, SetStateAction, useEffect, useState } from "react"
 
@@ -16,15 +17,15 @@ const EditMenu = ({ selectedMenu, editOpen, setEditOpen }: { selectedMenu: any, 
     })
 
    const [error, setError] = useState<Partial<MenuFormSchema>>({});
-
-    const loading = false;
+   
+   const {loading, editMenu} = useMenuStore();
 
     const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type } = e.target;
         setInput({ ...input, [name]: type === "number" ? Number(value) : value });
     };
     
-    const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+    const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const result = menuSchema.safeParse(input);
@@ -33,7 +34,18 @@ const EditMenu = ({ selectedMenu, editOpen, setEditOpen }: { selectedMenu: any, 
           setError(fieldErrors as Partial<MenuFormSchema>);
           return;
         }
-        console.log(input);
+        try {
+          const formData = new FormData();
+          formData.append("name", input.name);
+          formData.append("description", input.description);
+          formData.append("price", input.price.toString());
+          if(input.image){
+            formData.append("image", input.image);
+          }
+          await editMenu(selectedMenu._id, formData);
+        } catch (error) {
+          console.log(error);
+        }
     };
     
 
@@ -98,7 +110,7 @@ const EditMenu = ({ selectedMenu, editOpen, setEditOpen }: { selectedMenu: any, 
                   setInput({ ...input, image: e.target.files?.[0] || undefined })
                 }
               />
-                {error && <span className="text-xs text-red-500 font-medium">{error.image?.name || "Image file is required!"}</span>}
+                {error && <span className="text-xs text-red-500 font-medium">{error.image?.name}</span>}
             </div>
             <DialogFooter className="mt-5">
               {loading ? (

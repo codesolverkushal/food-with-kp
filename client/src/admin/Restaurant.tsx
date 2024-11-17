@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RestaurantFormSchema, restaurantSchema } from "@/schema/restaurantSchema";
-import useRestaurantStore from "@/store/useRestaurantStore";
+import {useRestaurantStore} from "@/store/useRestaurantStore";
 import { Loader2 } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 
@@ -154,7 +154,7 @@ const Restaurant = () => {
                   accept="image/*"
                   name="imageFile"
                    />
-                {error && <span className="text-xs text-red-500 font-medium">{error.imageFile?.name || "Image file is required!"}</span>}
+                {error && <span className="text-xs text-red-500 font-medium">{error.imageFile?.name}</span>}
 
               </div>
             </div>

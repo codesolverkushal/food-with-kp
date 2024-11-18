@@ -4,10 +4,9 @@ import { Input } from "../ui/input";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
-import { Globe, Globe2, MapPin, X } from "lucide-react";
+import { Globe, MapPin, X } from "lucide-react";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { AspectRatio } from "../ui/aspect-ratio";
-import { img1 } from "@/contants/data";
 import { Restaurant, useRestaurantStore } from "@/store/useRestaurantStore";
 const SearchPage = () => {
     const params = useParams();

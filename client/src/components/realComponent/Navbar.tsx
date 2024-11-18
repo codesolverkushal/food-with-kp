@@ -9,12 +9,14 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHe
 import { Separator } from "@radix-ui/react-separator";
 import useUserStore from "@/store/useUserStore";
 import { useCartStore } from "@/store/useCartStore";
+import { useThemeStore } from "@/store/useThemeStore";
 
 
 const Navbar = () => {
 
   const { user, logout } = useUserStore();
   const {cart} = useCartStore();
+  const {setTheme} = useThemeStore();
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -65,10 +67,10 @@ const Navbar = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={()=> setTheme('light')}>
                     Light
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={()=> setTheme('dark')}>
                     Dark
                   </DropdownMenuItem>
 
@@ -107,6 +109,7 @@ const MobileNavbar = () => {
 
   const {user,logout } = useUserStore();
   const {cart} = useCartStore();
+  const {setTheme} = useThemeStore();
  
   return (
     <Sheet>
@@ -131,10 +134,10 @@ const MobileNavbar = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={()=> setTheme('light')}>
                 Light
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={()=> setTheme('light')}>
                 Dark
               </DropdownMenuItem>
 

@@ -8,11 +8,13 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHe
 
 import { Separator } from "@radix-ui/react-separator";
 import useUserStore from "@/store/useUserStore";
+import { useCartStore } from "@/store/useCartStore";
 
 
 const Navbar = () => {
 
   const { user, logout } = useUserStore();
+  const {cart} = useCartStore();
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -76,7 +78,9 @@ const Navbar = () => {
             <div>
               <Link to="/cart" className="relative cursor-pointer">
                 <ShoppingBag />
-                <Button size={'icon'} className="absolute -inset-y-3 left-2 text-xs rounded-full h-6 w-6">5</Button>
+                {
+                  cart.length > 0 &&  <Button size={'icon'} className="absolute -inset-y-3 left-2 text-xs rounded-full h-6 w-6">{cart?.length}</Button>
+                }
               </Link>
             </div>
             <Avatar>
@@ -102,6 +106,7 @@ export default Navbar;
 const MobileNavbar = () => {
 
   const {user,logout } = useUserStore();
+  const {cart} = useCartStore();
  
   return (
     <Sheet>
@@ -148,7 +153,7 @@ const MobileNavbar = () => {
           </Link>
           <Link to="/cart" className="flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900">
             <ShoppingBag />
-            <span>Cart {0}</span>
+            <span>Cart {cart?.length}</span>
           </Link>
           {
             user?.admin && (

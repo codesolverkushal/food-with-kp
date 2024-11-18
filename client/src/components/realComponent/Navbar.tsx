@@ -84,7 +84,7 @@ const Navbar = () => {
               </Link>
             </div>
             <Avatar>
-              <AvatarImage />
+              <AvatarImage src={user?.profilePicture} alt="Loading..." />
               <AvatarFallback>KP</AvatarFallback>
             </Avatar>
             <Button onClick={logout} className="bg-orange hover:bg-hoverOrange">Logout</Button>
@@ -177,7 +177,7 @@ const MobileNavbar = () => {
         <SheetFooter className="flex flex-col gap-5">
           <div className="flex flex-row items-center gap-2">
             <Avatar>
-              <AvatarImage />
+              <AvatarImage src={user?.profilePicture} alt="Loading..." />
               <AvatarFallback>KP</AvatarFallback>
             </Avatar>
             <h1 className="font-bold">KP-Hotel's</h1>

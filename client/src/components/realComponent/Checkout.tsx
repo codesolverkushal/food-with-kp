@@ -4,16 +4,18 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
+import useUserStore from "@/store/useUserStore";
 
 const Checkout = ({open,setOpen}:{open:boolean;setOpen:Dispatch<SetStateAction<boolean>>}) => {
     const loading = false;
+    const {user} = useUserStore();
     const [input, setInput] = useState({
-        name:  "",
-        email: "",
-        contact:  "",
-        address: "",
-        city:  "",
-        country: "",
+        name: user?.fullname ||  "",
+        email: user?.email ||  "",
+        contact: user?.contact ||  "",
+        address: user?.address || "",
+        city: user?.city || "",
+        country: user?.country ||  "",
       });
     const changeEventHandler = (e:React.ChangeEvent<HTMLInputElement>)=>{
         const { name, value } = e.target;

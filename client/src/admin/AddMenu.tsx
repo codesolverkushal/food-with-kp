@@ -175,7 +175,7 @@ const AddMenu = () => {
               </h1>
               <p className="text-sm tex-gray-600 mt-1">{menu.description}</p>
               <h2 className="text-md font-semibold mt-2">
-                Price: <span className="text-[#D19254]">80</span>
+                Price: <span className="text-[#D19254]">{menu?.price}</span>
               </h2>
             </div>
             <Button

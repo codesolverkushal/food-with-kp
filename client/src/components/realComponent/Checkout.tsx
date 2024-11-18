@@ -5,26 +5,49 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 import useUserStore from "@/store/useUserStore";
+import { useCartStore } from "@/store/useCartStore";
+import { useRestaurantStore } from "@/store/useRestaurantStore";
+import { CheckoutSessionRequest, useOrderStore } from "@/store/useOrderStore";
 
 const Checkout = ({open,setOpen}:{open:boolean;setOpen:Dispatch<SetStateAction<boolean>>}) => {
-    const loading = false;
+    
     const {user} = useUserStore();
     const [input, setInput] = useState({
         name: user?.fullname ||  "",
         email: user?.email ||  "",
-        contact: user?.contact ||  "",
+        contact: user?.contact.toString() ||  "",
         address: user?.address || "",
         city: user?.city || "",
         country: user?.country ||  "",
       });
+
+      const {cart} = useCartStore();
+      const {restaurant} = useRestaurantStore();
+      const {createCheckoutSession,loading} = useOrderStore();
+
     const changeEventHandler = (e:React.ChangeEvent<HTMLInputElement>)=>{
         const { name, value } = e.target;
         setInput({ ...input, [name]: value });
     }
 
-    const checkoutHandler = (e:FormEvent<HTMLFormElement>)=>{
-        e.preventDefault();
-        console.log(input);
+    const checkoutHandler = async (e:FormEvent<HTMLFormElement>)=>{
+        e.preventDefault();       
+        try {
+          const checkoutData: CheckoutSessionRequest = {
+            cartItems: cart.map((cartItem) => ({
+              menuId: cartItem._id,
+              name: cartItem.name,
+              image: cartItem.image,
+              price: cartItem.price.toString(),
+              quantity: cartItem.quantity.toString(),
+            })),
+            deliveryDetails: input,
+            restaurantId: restaurant?._id as string,
+          };
+          await createCheckoutSession(checkoutData);
+        } catch (error) {
+          console.log(error);
+        }
     } 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

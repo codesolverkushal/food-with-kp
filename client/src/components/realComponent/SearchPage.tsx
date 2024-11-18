@@ -16,7 +16,6 @@ const SearchPage = () => {
 
     useEffect(() => {
         searchRestaurant(params.text!, searchQuery, appliedFilter);
-        console.log(searchedRestaurant);
       }, [params.text!, appliedFilter]);
     
     return (

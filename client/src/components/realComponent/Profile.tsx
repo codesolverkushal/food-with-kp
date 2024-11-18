@@ -4,21 +4,26 @@ import { Input } from "../ui/input"
 import { Label } from "../ui/label"
 import { FormEvent, useRef, useState } from "react"
 import { Button } from "../ui/button"
+import useUserStore from "@/store/useUserStore"
 
 
 const Profile = () => {
+
+    const {user,updateProfile,loading: isLoading} = useUserStore();
+
+   
     const [profileData,setProfileData] = useState({
-      fullname : "",
-      email:"",
-      address:"",
-      city:"",
-      country:"",
-      profilePicture:"",
+      fullname : user?.fullname || "",
+      email: user?.email || "",
+      address: user?.address || "",
+      city:user?.city || "",
+      country: user?.country || "",
+      profilePicture: user?.profilePicture || "",
 
     })
     const imageRef = useRef<HTMLInputElement | null>(null);
-    const [selectedProfilePicture,setSelectedProfilePicture] = useState<string>("");
-    const loading = false;
+    const [selectedProfilePicture,setSelectedProfilePicture] = useState<string>( profileData?.profilePicture || "");
+ 
 
     const fileChangeHandler = (e:React.ChangeEvent<HTMLInputElement>)=>{
          const file = e.target.files?.[0];
@@ -42,9 +47,10 @@ const Profile = () => {
        setProfileData({...profileData,[name]:value})
     }
 
-    const updateProfileHandler = (e:FormEvent<HTMLFormElement>)=>{
+    const updateProfileHandler = async (e:FormEvent<HTMLFormElement>)=>{
       e.preventDefault();
-      console.log(profileData);
+      await updateProfile(profileData);
+      
     }
   return (
     <form onSubmit={updateProfileHandler} className="max-w-7xl mx-auto my-5">
@@ -75,6 +81,7 @@ const Profile = () => {
             className="font-bold text-2xl outline-none border-none focus-visible:ring-transparent"
           />
         </div>
+
       </div>
       <div className="grid md:grid-cols-4 md:gap-2 gap-3 my-10">
         <div className="flex items-center gap-4 rounded-sm p-2 bg-gray-200">
@@ -82,6 +89,7 @@ const Profile = () => {
           <div className="w-full">
             <Label>Email</Label>
             <input
+              disabled
               name="email"
               value={profileData.email}
               onChange={changeHandler}
@@ -129,7 +137,7 @@ const Profile = () => {
 
       <div className="text-center">
             {
-              loading ? (
+              isLoading ? (
                 <Button disabled className="bg-hoverOrange"><Loader2 className="mr-2 w-4 h-4 animate-spin"/>Updating...</Button>
               ):(
                 <Button className="bg-orange hover:bg-hoverOrange">Update</Button>

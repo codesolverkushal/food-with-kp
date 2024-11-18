@@ -31,6 +31,8 @@ export type OrderState = {
     loading:boolean;
     orders:Orders[];
     createCheckoutSession: (checkoutSessionRequest:CheckoutSessionRequest) => Promise<void>;
+    getOrderDetails: () => Promise<void>;
+
     
 }
 
@@ -55,6 +57,16 @@ export const useOrderStore = create<OrderState>()(persist((set => ({
             set({ loading: false });
         }
     },
+    getOrderDetails: async () => {
+        try {
+            set({loading:true});
+            const response = await axios.get(`${API_END_POINT}/`);
+          
+            set({loading:false, orders:response.data.orders});
+        } catch (error) {
+            set({loading:false});
+        }
+    }
     
 })), {
     name: 'order-name',

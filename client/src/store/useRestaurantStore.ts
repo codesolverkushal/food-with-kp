@@ -40,8 +40,11 @@ interface RestaurantStore {
     updateMenuToRestaurant: (updatedMenu: MenuItem) => void;
     setAppliedFilter: (value: string) => void;
     resetAppliedFilter: () => void;
-    appliedFilter: string[],
+    appliedFilter: string[];
+    getSingleRestaurant:(restaurantId: string) => Promise<void>;
+    singleRestaurant: Restaurant | null;
 }
+
 
 
 const API_END_POINT = "http://localhost:3000/api/v1/restaurant";
@@ -54,6 +57,7 @@ export const useRestaurantStore = create<RestaurantStore>()(
             restaurant: null,
             searchedRestaurant: null,
             appliedFilter: [],
+            singleRestaurant: null,
             createRestaurant: async (formData: FormData) => {
                 try {
                     set({ loading: true });
@@ -150,6 +154,15 @@ export const useRestaurantStore = create<RestaurantStore>()(
             },
             resetAppliedFilter: () => {
                 set({ appliedFilter: [] })
+            },
+
+            getSingleRestaurant: async (restaurantId: string) => {
+                try {
+                    const response = await axios.get(`${API_END_POINT}/${restaurantId}`);
+                    if (response.data.success) {
+                        set({ singleRestaurant: response.data.restaurant })
+                    }
+                } catch (error) { }
             },
 
 

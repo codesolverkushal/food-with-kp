@@ -11,7 +11,7 @@ import { Restaurant, useRestaurantStore } from "@/store/useRestaurantStore";
 const SearchPage = () => {
     const params = useParams();
 
-    const {searchRestaurant,searchedRestaurant,appliedFilter,setAppliedFilter,resetAppliedFilter} = useRestaurantStore();
+    const {searchRestaurant,searchedRestaurant,appliedFilter,setAppliedFilter} = useRestaurantStore();
     const [searchQuery, setSearchQuery] = useState<string>("");
 
     useEffect(() => {

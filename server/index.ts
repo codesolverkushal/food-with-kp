@@ -8,10 +8,13 @@ import cors from 'cors';
 import restauRouter from './routes/restaurant.route';
 import menuRouter from './routes/menu.route';
 import orderRoute from './routes/order.route';
+import path from 'path';
 
 dotenv.config();
 
 const app = express();
+
+const DIRNAME = path.resolve();
 
 // default middleware for any mern project
 
@@ -31,6 +34,11 @@ app.use("/api/v1/restaurant", restauRouter);
 app.use("/api/v1/menu", menuRouter);
 app.use("/api/v1/order", orderRoute);
 
+
+app.use(express.static(path.join(DIRNAME,"/client/dist")));
+app.use("*",(_,res) => {
+    res.sendFile(path.resolve(DIRNAME, "client","dist","index.html"));
+});
 
 
 const PORT = 3000;

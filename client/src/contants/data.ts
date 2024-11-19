@@ -5,4 +5,4 @@ const img4:string = "https://images.pexels.com/photos/1640777/pexels-photo-16407
 const img5:string = "https://images.pexels.com/photos/10580198/pexels-photo-10580198.jpeg?auto=compress&cs=tinysrgb&w=800";
 const img6:string = "https://images.pexels.com/photos/9609843/pexels-photo-9609843.jpeg?auto=compress&cs=tinysrgb&w=800";
 const img7:string = "https://images.pexels.com/photos/11161475/pexels-photo-11161475.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
-export {img1,img2,img3,img5,img6,img7};
+export {img1,img2,img3,img5,img4,img6,img7};

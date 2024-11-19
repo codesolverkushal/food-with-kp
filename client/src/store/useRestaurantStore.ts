@@ -57,7 +57,7 @@ axios.defaults.withCredentials = true;
 
 export const useRestaurantStore = create<RestaurantStore>()(
     persist(
-        (set) => ({
+        (set,get) => ({
             loading: false,
             restaurant: null,
             searchedRestaurant: null,

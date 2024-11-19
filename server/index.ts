@@ -13,6 +13,8 @@ dotenv.config();
 
 const app = express();
 
+const PORT = process.env.PORT || 3000;
+
 // default middleware for any mern project
 
 app.use(bodyParser.json({ limit: '10mb' }));
@@ -20,7 +22,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.json());
 app.use(cookieParser());
 const corsOptions = {
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin:"http://localhost:5173",
     credentials: true
 }
 app.use(cors(corsOptions));
@@ -33,7 +35,7 @@ app.use("/api/v1/order", orderRoute);
 
 
 
-const PORT = process.env.PORT ||  3000;
+
 
 app.listen(PORT,()=>{
     connectDb();

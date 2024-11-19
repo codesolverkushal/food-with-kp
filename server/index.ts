@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.json());
 app.use(cookieParser());
 const corsOptions = {
-    origin: "http://localhost:5173",
+    origin: "https://food-with-kp.onrender.com",
     credentials: true
 }
 app.use(cors(corsOptions));
@@ -41,7 +41,7 @@ app.use("*",(_,res) => {
 });
 
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT,()=>{
     connectDb();
